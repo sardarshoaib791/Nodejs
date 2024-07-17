@@ -93,3 +93,36 @@ const fs = require("fs");
 // console.log("When my computer start:", os.uptime());
 
 //====> Events Module
+
+const Emiter = require("events");
+const { register } = require("module");
+const { emit } = require("process");
+
+// const myEmit = new Emiter();
+
+// myEmit.on("someName", (data) => {
+//   console.log(data);
+// });
+
+// myEmit.emit("someName", {
+//   name: "shoaib",
+// });
+
+class Auth extends Emiter {
+  register(username, password) {
+    console.log(`${username} regiterd succesfully`);
+    this.emit("registered", username);
+    this.emit("password", password);
+  }
+}
+
+const clasObject = new Auth();
+//Listner
+clasObject.on("registered", (data) => {
+  console.log(`email verification sending to ${data}`);
+});
+//Listner
+clasObject.on("password", (pass) => {
+  console.log(`your password created ${pass}`);
+});
+clasObject.register("shoaib", "sdfghjkuyugy");
