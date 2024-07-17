@@ -33,8 +33,8 @@
 // console.log("Parse:", path.join(__dirname, "src", "App.js")); //important
 
 //===========> File System
-const path = require("path");
-const fs = require("fs");
+// const path = require("path");
+// const fs = require("fs");
 
 //make dirictory or folder
 
@@ -94,9 +94,9 @@ const fs = require("fs");
 
 //====> Events Module
 
-const Emiter = require("events");
-const { register } = require("module");
-const { emit } = require("process");
+// const Emiter = require("events");
+// const { register } = require("module");
+// const { emit } = require("process");
 
 // const myEmit = new Emiter();
 
@@ -108,21 +108,80 @@ const { emit } = require("process");
 //   name: "shoaib",
 // });
 
-class Auth extends Emiter {
-  register(username, password) {
-    console.log(`${username} regiterd succesfully`);
-    this.emit("registered", username);
-    this.emit("password", password);
-  }
-}
+// class Auth extends Emiter {
+//   register(username, password) {
+//     console.log(`${username} regiterd succesfully`);
+//     this.emit("registered", username);
+//     this.emit("password", password);
+//   }
+// }
 
-const clasObject = new Auth();
-//Listner
-clasObject.on("registered", (data) => {
-  console.log(`email verification sending to ${data}`);
+// const clasObject = new Auth();
+// //Listner
+// clasObject.on("registered", (data) => {
+//   console.log(`email verification sending to ${data}`);
+// });
+// //Listner
+// clasObject.on("password", (pass) => {
+//   console.log(`your password created ${pass}`);
+// });
+// clasObject.register("shoaib", "sdfghjkuyugy");
+
+///=========>> HTTP module:(Most Important)
+
+const http = require("http");
+const fs = require("fs");
+const path = require("path");
+
+const server = http.createServer((request, response) => {
+  //   console.log(request.url);
+  //   response.writeHead(200, {
+  //     "Content-Type": "text/html",
+  //   });
+
+  //   if (request.url === "/") {
+  //     fs.readFile(path.join(__dirname, "/src", "index.html"), (err, content) => {
+  //       if (err) {
+  //         throw err;
+  //       }
+  //       response.end(content);
+  //     });
+  //   } else if (request.url === "/about")
+  //     fs.readFile(path.join(__dirname, "/src", "about.html"), (err, content) => {
+  //       if (err) {
+  //         throw err;
+  //       }
+  //       response.end(content);
+  //     });
+  let filePath = path.join(
+    __dirname,
+    "src",
+    request.url === "/" ? "index.html" : request.url + ".html"
+  );
+
+  fs.readFile(filePath, (err, content) => {
+    if (err) {
+      fs.readFile(path.join(__dirname, "src", "error.html"), (err, data) => {
+        if (err) {
+          response.writeHead(500);
+          response.end("ERROR...");
+        } else {
+          response.writeHead(404, {
+            "Content-Type": "text/html",
+          });
+          response.end(data);
+        }
+      });
+    } else {
+      response.writeHead(200, {
+        "Content-Type": "text/html",
+      });
+      response.end(content);
+    }
+  });
 });
-//Listner
-clasObject.on("password", (pass) => {
-  console.log(`your password created ${pass}`);
+
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log("Listing at " + PORT);
 });
-clasObject.register("shoaib", "sdfghjkuyugy");

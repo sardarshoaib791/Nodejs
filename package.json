@@ -4,7 +4,8 @@
   "description": "this is my learnig practus file",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node module",
+    "dev": "nodemon module"
   },
   "keywords": [
     "javascript",
