@@ -156,8 +156,23 @@ const server = http.createServer((request, response) => {
   let filePath = path.join(
     __dirname,
     "src",
-    request.url === "/" ? "index.html" : request.url + ".html"
+    request.url === "/" ? "index.html" : request.url
   );
+  let ContentType = "text/html";
+  let ext = path.extname(filePath);
+  if (!ext) {
+    filePath += ".html";
+  }
+  switch (ext) {
+    case ".css":
+      ContentType = "text/css";
+      break;
+    case ".js":
+      ContentType = "text/javascript";
+      break;
+    default:
+      ContentType = "text/html";
+  }
 
   fs.readFile(filePath, (err, content) => {
     if (err) {
@@ -167,14 +182,14 @@ const server = http.createServer((request, response) => {
           response.end("ERROR...");
         } else {
           response.writeHead(404, {
-            "Content-Type": "text/html",
+            "Content-Type": ContentType,
           });
           response.end(data);
         }
       });
     } else {
       response.writeHead(200, {
-        "Content-Type": "text/html",
+        "Content-Type": ContentType,
       });
       response.end(content);
     }
